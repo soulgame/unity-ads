@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import com.unity3d.ads.android.R;
+import com.unity3d.ads.android.UnityAdsUtils;
 
 public class UnityAdsVideoPausedView extends RelativeLayout {
 	public UnityAdsVideoPausedView(Context context) {
@@ -26,6 +26,6 @@ public class UnityAdsVideoPausedView extends RelativeLayout {
 
 	private void createView () {
 		LayoutInflater inflater = LayoutInflater.from(getContext());
-		inflater.inflate(R.layout.unityads_view_video_paused, this);
+		inflater.inflate(UnityAdsUtils.findResourceId("layout", "unityads_view_video_paused", this.getContext()), this);
 	}
 }

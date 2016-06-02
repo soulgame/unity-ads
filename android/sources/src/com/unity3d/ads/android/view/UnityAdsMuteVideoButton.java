@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.unity3d.ads.android.R;
 import com.unity3d.ads.android.UnityAdsDeviceLog;
+import com.unity3d.ads.android.UnityAdsUtils;
 
 public class UnityAdsMuteVideoButton extends RelativeLayout {
 
@@ -36,8 +36,8 @@ public class UnityAdsMuteVideoButton extends RelativeLayout {
 		if (state != null && !state.equals(_state)) {
 			_state = state;
 
-			View muted = _layout.findViewById(R.id.unityAdsMuteButtonSpeakerX);
-			View unmuted = _layout.findViewById(R.id.unityAdsMuteButtonSpeakerWaves);
+			View muted = _layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsMuteButtonSpeakerX", this.getContext()));
+			View unmuted = _layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsMuteButtonSpeakerWaves", this.getContext()));
 
 			if (muted != null && unmuted != null) {
 				switch (_state) {

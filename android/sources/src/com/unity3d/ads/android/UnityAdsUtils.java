@@ -5,11 +5,13 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 import java.util.Locale;
 
 import javax.security.auth.x500.X500Principal;
@@ -25,6 +27,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.content.Context;
 
 import com.unity3d.ads.android.properties.UnityAdsProperties;
 
@@ -185,5 +188,44 @@ public class UnityAdsUtils {
 		else {
 			handler.post(runnable);
 		}
+	}
+
+    private static HashMap<String, Integer> _resourceIdMap = new HashMap<String, Integer>();
+	public static int findResourceId (String resourceType, String resourceName, Context context) {
+        String resourceKey = resourceType + "." + resourceName;
+        Integer resourceId = _resourceIdMap.get(resourceKey);
+        if (null != resourceId) {
+            return resourceId;
+        }
+        int resId = 0;
+		String packageName = null;
+		if (null == context) {
+			packageName = "com.unity3d.ads.android";
+		} else {
+			packageName = context.getPackageName();
+		}
+		try {
+			Class resourceClass = Class.forName(packageName + ".R$" + resourceType);
+			Field resourceField = resourceClass.getField(resourceName);
+			resId = Integer.parseInt(resourceField.get(resourceField.getName()).toString());
+		}  catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+            _resourceIdMap.put(resourceKey, Integer.valueOf(resId));
+        }
+        return resId;
 	}
 }

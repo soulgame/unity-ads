@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.unity3d.ads.android.R;
 import com.unity3d.ads.android.UnityAdsDeviceLog;
 import com.unity3d.ads.android.UnityAdsUtils;
 import com.unity3d.ads.android.properties.UnityAdsProperties;
@@ -38,7 +37,7 @@ public class UnityAdsVideoPlayView extends RelativeLayout {
 	private long _videoStartedPlayingMillis = 0;
 	private float _volumeBeforeMute = 0.5f;
 
-	private final Map<UnityAdsVideoPosition, Boolean> _sentPositionEvents = new HashMap<>();
+	private final Map<UnityAdsVideoPosition, Boolean> _sentPositionEvents = new HashMap<UnityAdsVideoPosition, Boolean>();
 	private UnityAdsVideoPausedView _pausedView = null;
 	private UnityAdsMuteVideoButton _muteButton = null;
 	private LinearLayout _countDownText = null;
@@ -57,19 +56,24 @@ public class UnityAdsVideoPlayView extends RelativeLayout {
 	private TextView _skipTextView = null;
 	private TextView _bufferingText = null;
 
+	private Context _context = null;
+
 	public UnityAdsVideoPlayView(Context context) {
 		super(context);
+		_context = context;
 		createView();
 	}
 
 	public UnityAdsVideoPlayView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		_context = context;
 		createView();
 	}
 
 	public UnityAdsVideoPlayView(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
+		_context = context;
 		createView();
 	}
 
@@ -222,14 +226,14 @@ public class UnityAdsVideoPlayView extends RelativeLayout {
 
 	private void createView () {
 		LayoutInflater inflater = LayoutInflater.from(getContext());
-		_layout = (RelativeLayout)inflater.inflate(R.layout.unityads_view_video_play, this);
+		_layout = (RelativeLayout)inflater.inflate(UnityAdsUtils.findResourceId("layout", "unityads_view_video_play", _context), this);
 
 		UnityAdsZone currentZone = UnityAdsWebData.getZoneManager().getCurrentZone();
 		if (currentZone.muteVideoSounds()) {
 			_muted = true;
 		}
 
-		_videoView = (UnityAdsVideoView)_layout.findViewById(R.id.unityAdsVideoView);
+		_videoView = (UnityAdsVideoView)_layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoView", _context));
 		_videoView.setClickable(true);
 		_videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 			@Override
@@ -252,19 +256,19 @@ public class UnityAdsVideoPlayView extends RelativeLayout {
 			}
 		});
 
-		_bufferingText = (TextView)_layout.findViewById(R.id.unityAdsVideoBufferingText);
-		_countDownText = (LinearLayout)_layout.findViewById(R.id.unityAdsVideoCountDown);
-		_timeLeftInSecondsText = (TextView)_layout.findViewById(R.id.unityAdsVideoTimeLeftText);
-		_timeLeftInSecondsText.setText(R.string.unityads_default_video_length_text);
-		_skipTextView = (TextView)_layout.findViewById(R.id.unityAdsVideoSkipText);
+		_bufferingText = (TextView)_layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoBufferingText", _context));
+		_countDownText = (LinearLayout)_layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoCountDown", _context));
+		_timeLeftInSecondsText = (TextView)_layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoTimeLeftText", _context));
+		_timeLeftInSecondsText.setText(UnityAdsUtils.findResourceId("string", "unityads_default_video_length_text", _context));
+		_skipTextView = (TextView)_layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoSkipText", _context));
 		_muteButton = new UnityAdsMuteVideoButton(getContext());
-		_muteButton.setLayout((RelativeLayout) _layout.findViewById(R.id.unityAdsAudioToggleView));
+		_muteButton.setLayout((RelativeLayout) _layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsAudioToggleView", _context)));
 
 		if (_muted) {
 			_muteButton.setState(UnityAdsMuteVideoButton.UnityAdsMuteVideoButtonState.Muted);
 		}
 
-		_layout.findViewById(R.id.unityAdsAudioToggleView).setOnClickListener(new OnClickListener() {
+		_layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsAudioToggleView", _context)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (_videoPlayheadPrepared && _videoPlaybackStartedSent) {
@@ -316,11 +320,11 @@ public class UnityAdsVideoPlayView extends RelativeLayout {
 
 	private void enableSkippingFromSkipText () {
 		if (_skipTextView == null) {
-			_skipTextView = (TextView) _layout.findViewById(R.id.unityAdsVideoSkipText);
+			_skipTextView = (TextView) _layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoSkipText", _context));
 		}
 
 		if (_skipTextView != null) {
-			_skipTextView.setText(R.string.unityads_skip_video_text);
+			_skipTextView.setText(UnityAdsUtils.findResourceId("string", "unityads_skip_video_text", _context));
 		}
 
 		if (_skipTextView != null) {
@@ -336,15 +340,15 @@ public class UnityAdsVideoPlayView extends RelativeLayout {
 
 	private void updateSkipText (long skipTimeSeconds) {
 		if (_skipTextView == null) {
-			_skipTextView = (TextView) _layout.findViewById(R.id.unityAdsVideoSkipText);
+			_skipTextView = (TextView) _layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoSkipText", _context));
 		}
 
-		_skipTextView.setText(getResources().getString(R.string.unityads_skip_video_prefix) + " " + skipTimeSeconds + " " + getResources().getString(R.string.unityads_skip_video_suffix));
+		_skipTextView.setText(getResources().getString(UnityAdsUtils.findResourceId("string", "unityads_skip_video_prefix", _context)) + " " + skipTimeSeconds + " " + getResources().getString(UnityAdsUtils.findResourceId("string", "unityads_skip_video_suffix", _context)));
 	}
 
 	private void updateTimeLeftText () {
 		if (_timeLeftInSecondsText == null) {
-			_timeLeftInSecondsText = (TextView)_layout.findViewById(R.id.unityAdsVideoTimeLeftText);
+			_timeLeftInSecondsText = (TextView)_layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsVideoTimeLeftText", _context));
 		}
 
 		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil((_videoView.getDuration() - _videoView.getCurrentPosition()) / 1000)));
