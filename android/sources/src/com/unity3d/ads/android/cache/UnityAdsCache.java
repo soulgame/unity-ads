@@ -91,9 +91,12 @@ public class UnityAdsCache {
 
 				String absoluteCachePath;
 				absoluteCachePath = externalCacheFile.getAbsolutePath();
-				_cacheDirectory = new File(absoluteCachePath, UnityAdsConstants.CACHE_DIR_NAME);
-				if (_cacheDirectory.mkdirs()) {
+				File externalCacheDirectory = new File(absoluteCachePath, UnityAdsConstants.CACHE_DIR_NAME);
+				if (externalCacheDirectory.mkdirs()) {
 					UnityAdsDeviceLog.debug("Successfully created cache");
+				}
+				if(externalCacheDirectory.listFiles() != null) {
+					_cacheDirectory = externalCacheDirectory;
 				}
 			}
 		}
@@ -125,6 +128,11 @@ public class UnityAdsCache {
 			};
 
 			fileList = _cacheDirectory.listFiles(filter);
+		}
+
+		if(fileList == null) {
+			UnityAdsDeviceLog.error("Unity Ads cache: unable to read cache directory");
+			return;
 		}
 
 		for(File cacheFile : fileList) {

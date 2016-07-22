@@ -12,7 +12,7 @@
 #import "../UnityAdsDevice/UnityAdsDevice.h"
 #import "UnityAdsCacheManager.h"
 
-NSString * const kUnityAdsVersion = @"1507";
+NSString * const kUnityAdsVersion = @"1508";
 
 @implementation UnityAdsProperties
 
@@ -35,7 +35,6 @@ static UnityAdsProperties *sharedProperties = nil;
     [self setSdkIsCurrent:true];
     [self setExpectedSdkVersion:@"0"];
     [self setUnityVersion:nil];
-    [self setSelectedCampaignBrandSkipStatus:true];
   }
   
   return self;
