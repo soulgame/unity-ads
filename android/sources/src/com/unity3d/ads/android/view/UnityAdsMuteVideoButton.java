@@ -13,7 +13,7 @@ public class UnityAdsMuteVideoButton extends RelativeLayout {
 	private UnityAdsMuteVideoButtonState _state = UnityAdsMuteVideoButtonState.UnMuted;
 
 	public enum UnityAdsMuteVideoButtonState { UnMuted, Muted }
-	private RelativeLayout _layout = null;
+	private UnityAdsButtonAudioToggleLayout _layout = null;
 
 	public UnityAdsMuteVideoButton(Context context) {
 		super(context);
@@ -28,7 +28,7 @@ public class UnityAdsMuteVideoButton extends RelativeLayout {
 		super(context, attrs, defStyle);
 	}
 
-	public void setLayout (RelativeLayout layout) {
+	public void setLayout (UnityAdsButtonAudioToggleLayout layout) {
 		_layout = layout;
 	}
 	
@@ -36,8 +36,8 @@ public class UnityAdsMuteVideoButton extends RelativeLayout {
 		if (state != null && !state.equals(_state)) {
 			_state = state;
 
-			View muted = _layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsMuteButtonSpeakerX", this.getContext()));
-			View unmuted = _layout.findViewById(UnityAdsUtils.findResourceId("id", "unityAdsMuteButtonSpeakerWaves", this.getContext()));
+			View muted = _layout.getUnityAdsMuteButtonSpeakerX();
+			View unmuted = _layout.getUnityAdsMuteButtonSpeakerWaves();
 
 			if (muted != null && unmuted != null) {
 				switch (_state) {
